@@ -1,0 +1,18 @@
+[
+  {
+    "week": "2025-08-12",
+    "title": "Sample Week",
+    "summary": "This is a sample weekly entry for the dashboard.",
+    "highlights": [
+      "Created initial data.json file",
+      "Set up basic JSON structure",
+      "Added sample weekly data"
+    ],
+    "metrics": {
+      "tasks_completed": 5,
+      "hours_worked": 40,
+      "goals_achieved": 2
+    },
+    "notes": "This is the first entry in the weekly dashboard data file."
+  }
+]
