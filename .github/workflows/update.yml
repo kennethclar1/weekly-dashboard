@@ -1,0 +1,48 @@
+name: Update Data
+
+on:
+  workflow_dispatch:
+    inputs:
+      data:
+        description: 'JSON data to merge with data.json'
+        required: true
+        type: string
+
+jobs:
+  update-data:
+    runs-on: ubuntu-latest
+    
+    steps:
+    - name: Checkout repository
+      uses: actions/checkout@v4
+      
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: '18'
+        
+    - name: Update data.json
+      run: |
+        # Parse existing data.json and input JSON
+        existing_data=$(cat data.json)
+        input_data='${{ inputs.data }}'
+        
+        # Use Node.js to merge the JSON objects
+        node -e "
+        const fs = require('fs');
+        const existing = JSON.parse('$existing_data');
+        const input = JSON.parse(process.argv[1]);
+        const merged = { ...existing, ...input };
+        fs.writeFileSync('data.json', JSON.stringify(merged, null, 2));
+        " "$input_data"
+        
+    - name: Commit changes
+      run: |
+        git config --local user.email "action@github.com"
+        git config --local user.name "GitHub Action"
+        git add data.json
+        git diff --staged --quiet || git commit -m "Update data.json via workflow_dispatch"
+        
+    - name: Push changes
+      run: |
+        git push origin main
